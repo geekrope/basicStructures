@@ -64,7 +64,7 @@ public class LinkedList<T>
     {
         StringBuilder output = new();
 
-        ForEach((Node<T> node, int index) => { output.Append(node.ToString() + " "); });
+        ForEach((Node<T> node, int index) => { output.Append(node.Value?.ToString() + " "); });
 
         return output.ToString();
     }
@@ -190,7 +190,7 @@ public class LinkedList<T>
 
             for (; currentNode != null;)
             {
-                if (currentNode.Next == node)
+                if (currentNode == node)
                 {
                     if (previousNode == null)
                     {
@@ -228,19 +228,44 @@ public class LinkedList<T>
     }
     public void RemoveAll(T key)
     {
-        for (var node = FindLast(key); node != null;)
+        for (var node = FindLast(key); node != null; node = FindLast(key))
         {
             RemoveNode(node);
         }
     }
     public void Reverse()
     {
+        Node<T>? newFirst = null;
+
         ForEach((Node<T> node, int index) =>
         {
-            if (node.Next != null)
-            {
-
-            }
+            newFirst = new Node<T>(node.Value, newFirst);
         });
+
+        first = newFirst;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var list = new LinkedList<int>();
+
+        list.PushBack(5);
+        list.PushBack(1);
+        list.PushBack(2);
+        list.PushBack(3);
+        list.PushBack(5);
+        list.PushBack(4);
+        list.PushBack(5);
+        list.PushBack(5);
+        list.PushBack(5);
+        list.PushBack(5);
+        list.PushBack(5);
+
+        list.RemoveAll(1);
+
+        Console.WriteLine(list.Print());
     }
 }
