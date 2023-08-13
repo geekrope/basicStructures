@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 public class Node<T>
 {
@@ -27,29 +28,9 @@ public class LinkedList<T>
 {
     private Node<T>? first;
 
-    private void ForEach(Action<Node<T>, int> itterator)
+    public Node<T>? First
     {
-        if (first != null)
-        {
-            var currentNode = first;
-
-            for (int index = 0; currentNode != null; index++)
-            {
-                itterator(currentNode, index);
-                currentNode = currentNode.Next;
-            }
-        }
-    }
-    private Node<T>? Last()
-    {
-        Node<T>? output = null;
-
-        ForEach((Node<T> node, int index) =>
-        {
-            output = node;
-        });
-
-        return output;
+        get { return first; }
     }
 
     public int GetCount()
@@ -67,6 +48,17 @@ public class LinkedList<T>
         ForEach((Node<T> node, int index) => { output.Append(node.Value?.ToString() + " "); });
 
         return output.ToString();
+    }
+    public Node<T>? Last()
+    {
+        Node<T>? output = null;
+
+        ForEach((Node<T> node, int index) =>
+        {
+            output = node;
+        });
+
+        return output;
     }
     public Node<T>? Find(T key)
     {
@@ -109,6 +101,19 @@ public class LinkedList<T>
         });
 
         return output;
+    }
+    public void ForEach(Action<Node<T>, int> itterator)
+    {
+        if (first != null)
+        {
+            var currentNode = first;
+
+            for (int index = 0; currentNode != null; index++)
+            {
+                itterator(currentNode, index);
+                currentNode = currentNode.Next;
+            }
+        }
     }
     public void PushBack(T key)
     {
@@ -243,6 +248,61 @@ public class LinkedList<T>
         });
 
         first = newFirst;
+    }
+    public void Clear()
+    {
+        first = null;
+    }
+}
+
+public class Stack<T>
+{
+    private LinkedList<T> elements;
+
+    private void ForEach(Action<T> itterator)
+    {
+        elements.ForEach((node, index) => { itterator(node.Value); });
+    }
+
+    public string Print()
+    {
+        var output = new StringBuilder();
+
+        ForEach((element) => { output.Append(element.ToString() + " "); });
+
+        return output.ToString();
+    }
+    public bool Empty()
+    {
+        return elements.GetCount() == 0;
+    }
+    public void Push(T key)
+    {
+        elements.PushFront(key);
+    }
+    public void Pop()
+    {
+        elements.RemoveFirst();
+    }
+    public T? Top()
+    {
+        if (elements.First != null)
+        {
+            return elements.First.Value;
+        }
+        else
+        {
+            return default(T);
+        }
+    }
+    public void Clear()
+    {
+        elements.Clear();
+    }
+
+    public Stack()
+    {
+        elements = new LinkedList<T>();
     }
 }
 
