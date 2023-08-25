@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Xml.Linq;
 
 public class Node<T>
 {
@@ -32,15 +33,32 @@ public class LinkedList<T>
     {
         get { return first; }
     }
-
-    public int GetCount()
+    public int Count
     {
-        int count = 0;
+        get
+        {
+            int count = 0;
 
-        ForEach((Node<T> node, int index) => { count++; });
+            ForEach((Node<T> node, int index) => { count++; });
 
-        return count;
+            return count;
+        }
     }
+    public Node<T>? Last
+    {
+        get
+        {
+            Node<T>? output = null;
+
+            ForEach((Node<T> node, int index) =>
+            {
+                output = node;
+            });
+
+            return output;
+        }
+    }
+
     public string Print()
     {
         StringBuilder output = new();
@@ -48,17 +66,6 @@ public class LinkedList<T>
         ForEach((Node<T> node, int index) => { output.Append(node.Value?.ToString() + " "); });
 
         return output.ToString();
-    }
-    public Node<T>? Last()
-    {
-        Node<T>? output = null;
-
-        ForEach((Node<T> node, int index) =>
-        {
-            output = node;
-        });
-
-        return output;
     }
     public Node<T>? Find(T key)
     {
@@ -117,7 +124,7 @@ public class LinkedList<T>
     }
     public void PushBack(T key)
     {
-        var last = Last();
+        var last = Last;
 
         if (last != null)
         {
@@ -274,7 +281,7 @@ public class Stack<T>
     }
     public bool Empty()
     {
-        return elements.GetCount() == 0;
+        return elements.Count == 0;
     }
     public void Push(T key)
     {
@@ -301,6 +308,50 @@ public class Stack<T>
     }
 
     public Stack()
+    {
+        elements = new LinkedList<T>();
+    }
+}
+
+public class Queue<T>
+{
+    private LinkedList<T> elements;
+
+    private void ForEach(Action<T> itterator)
+    {
+        elements.ForEach((node, index) => { itterator(node.Value); });
+    }
+
+    public string Print()
+    {
+        var output = new StringBuilder();
+
+        ForEach((element) => { output.Append(element.ToString() + " "); });
+
+        return output.ToString();
+    }
+    public void Enqueue(T element)
+    {
+        elements.PushFront(element);
+    }
+    public T? Dequeue()
+    {
+        var first = elements.First;
+
+        if (first != null)
+        {
+            elements.RemoveFirst();
+            return first.Value;
+        }
+
+        return default(T);
+    }
+    public T? Peek()
+    {
+        return elements.First != null ? elements.First.Value : default(T);
+    }
+
+    public Queue()
     {
         elements = new LinkedList<T>();
     }
