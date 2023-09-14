@@ -10,13 +10,36 @@ namespace basicStructures
     {
         private BinaryTree? branch1;
         private BinaryTree? branch2;
-        private int size;
 
         private int? root;
 
         public int Size
         {
-            get => size;
+            get
+            {
+                var branchSize1 = branch1 != null ? branch1.Size : 0;
+                var branchSize2 = branch2 != null ? branch2.Size : 0;
+
+                return branchSize1 + branchSize2;
+            }
+        }
+
+        private BinaryTree Maximum()
+        {
+            if (branch2 == null)
+            {
+                return this;
+            }
+            else
+            {
+                return branch2.Maximum();
+            }
+        }
+        private void Replace(BinaryTree with)
+        {
+            root = with.root;
+            branch1 = with.branch1;
+            branch2 = with.branch2;
         }
 
         public void Insert(int element)
@@ -50,27 +73,58 @@ namespace basicStructures
 
                 insertBranch.Insert(element);
             }
+        }
+        public void Erase(int element)
+        {
+            var branches = Find(element);
 
-            size++;
+            if (branches != null)
+            {
+                foreach (var branch in branches)
+                {
+                    if (branch.branch1 == null)
+                    {
+                        if (branch.branch2 != null)
+                        {
+                            branch.Replace(branch.branch2);
+                        }
+                        else
+                        {
+                            branch.root = null;
+                        }
+                    }
+                    else
+                    {
+                        var max = branch.branch1.Maximum();
+                        max.branch2 = branch.branch2;
+
+                        branch.Replace(branch.branch1);
+                    }
+                }
+            }
         }
         public BinaryTree[]? Find(int element)
         {
             var elementInFirstBranch = branch1?.Find(element);
             var elementInSecondBranch = branch2?.Find(element);
-            var elementInBranches = elementInFirstBranch?.Concat(elementInSecondBranch != null ? elementInSecondBranch : new BinaryTree[0]);
+
+            elementInFirstBranch = elementInFirstBranch != null ? elementInFirstBranch : new BinaryTree[0];
+            elementInSecondBranch = elementInSecondBranch != null ? elementInSecondBranch : new BinaryTree[0];
+
+            var elementInBranches = elementInFirstBranch.Concat(elementInSecondBranch);
 
             if (root == element)
             {
-                return new BinaryTree[] { this }.Concat(elementInBranches != null ? elementInBranches : new BinaryTree[0]).ToArray();
+                return new BinaryTree[] { this }.Concat(elementInBranches).ToArray();
             }
             else
             {
-                return elementInBranches?.ToArray();
+                return elementInBranches.ToArray();
             }
         }
         public string Print()
         {
-            return branch1?.Print() + " " + root + branch2?.Print();
+            return branch1?.Print() + (root != null ? (" " + root) : "") + branch2?.Print();
         }
 
         public BinaryTree()
