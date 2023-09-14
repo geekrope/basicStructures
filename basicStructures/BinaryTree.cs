@@ -20,7 +20,7 @@ namespace basicStructures
                 var branchSize1 = branch1 != null ? branch1.Size : 0;
                 var branchSize2 = branch2 != null ? branch2.Size : 0;
 
-                return branchSize1 + branchSize2+1;
+                return branchSize1 + branchSize2 + (root != null ? 1 : 0);
             }
         }
 
