@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace basicStructures
@@ -10,41 +12,35 @@ namespace basicStructures
     {
         public static void QuickSort<T>(this T[] array, int from, int to) where T : IComparable
         {
-            if (to - from <= 1)
-            {
-                return;
-            }
-
             var left = from;
             var right = to;
             var barrier = array[left];
 
-            for (int index = from; index <= to; index++)
+            while (left <= right)
             {
-                var comparison = barrier.CompareTo(array[index]);
+                while (barrier.CompareTo(array[left]) > 0)
+                {
+                    left++;
+                }
 
-                if (comparison > 0)
+                while (barrier.CompareTo(array[right]) < 0)
+                {
+                    right--;
+                }
+
+                if (left <= right)
                 {
                     var temp = array[left];
 
-                    array[left] = array[index];
-                    array[index] = temp;
+                    array[left] = array[right];
+                    array[right] = temp;
 
-                    left++;
-                }
-                else if (comparison < 0)
-                {
-                    var temp = array[right];
-
-                    array[right] = array[index];
-                    array[index] = temp;
-
-                    right--;
+                    left++; right--;
                 }
             }
 
-            QuickSort(array, 0, left);
-            QuickSort(array, right, to);
+            if (from < right) { QuickSort(array, from, right); }
+            if (left < to) { QuickSort(array, left, to); }
         }
         public static T[] BubbleSort<T>(this T[] array) where T : IComparable
         {
