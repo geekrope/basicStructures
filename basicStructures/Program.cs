@@ -6,19 +6,9 @@ namespace basicStructures
     {
         public static void Main(string[] args)
         {
-            var tree = new BinaryTree();
+            var array = new int[] { 1, 4, 5, 3, 11, 45, 7, 458, 3, 5, 23, 5, 235 };
 
-            tree.Insert(1);
-            tree.Insert(2);
-            tree.Insert(3);
-            tree.Insert(8);
-            tree.Insert(0);
-            tree.Insert(-3);
-            tree.Insert(-4);
-
-            tree.Erase(8);
-
-            Console.WriteLine(tree.Print());
+            array.QuickSort(0, array.Length - 1);
         }
     }
 }
